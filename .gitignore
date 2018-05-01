@@ -1,3 +1,8 @@
-.stack-work/
-join-list.cabal
-*~
+.gitignore
+*.swp
+*.orig
+/adventData
+.DS_Store
+*.o
+*.bf
+*.stack*
