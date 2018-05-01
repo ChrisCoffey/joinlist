@@ -2,6 +2,7 @@ module Data.JoinList where
 
 import Prelude hiding (filter)
 
+import Data.Foldable (foldl')
 import Data.Semigroup
 
 data JoinList a
@@ -31,8 +32,15 @@ instance Monoid (JoinList a) where
     mempty = Empty
     mappend = (<>)
 
+instance Foldable JoinList where
+    foldMap _ Empty = mempty
+    foldMap f (Singleton a) = f a
+    foldMap f (Join l r) = foldMap f l `mappend` foldMap f r
+
 instance Monad JoinList where
-    (>>=)
+    Empty >>= f = Empty
+    (Singleton a) >>= f = f a
+    (Join l r) >>= f = (concatJ $ f <$> l) <> (concatJ $ f <$> r)
 
 leftHead ::
     JoinList a
@@ -86,3 +94,8 @@ isEmpty ::
     -> Bool
 isEmpty Empty = True
 isEmpty _ = False
+
+concatJ ::
+    JoinList (JoinList a)
+    -> JoinList a
+concatJ = foldl' (<>) mempty
