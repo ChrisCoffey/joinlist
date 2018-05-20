@@ -51,6 +51,9 @@ test-suite join-list-test
   build-depends:
       base >=4.7 && <5
     , join-list
+    , tasty
+    , tasty-quickcheck
+    , QuickCheck
   other-modules:
       Paths_join_list
   default-language: Haskell2010

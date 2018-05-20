@@ -99,3 +99,15 @@ concatJ ::
     JoinList (JoinList a)
     -> JoinList a
 concatJ = foldl' (<>) mempty
+
+toList ::
+    JoinList a
+    -> [a]
+toList Empty = []
+toList (Singleton x) = [x]
+toList (Join l r) = toList l <> toList r
+
+fromFoldable :: Foldable f =>
+    f a
+    -> JoinList a
+fromFoldable = foldr cons Empty
