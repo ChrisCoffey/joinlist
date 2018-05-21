@@ -47,6 +47,7 @@ leftHead ::
     -> Maybe a
 leftHead Empty = Nothing
 leftHead (Singleton a) = Just a
+leftHead (Join Empty r) = leftHead r
 leftHead (Join l _) = leftHead l
 
 rightHead ::
@@ -54,19 +55,24 @@ rightHead ::
     -> Maybe a
 rightHead Empty = Nothing
 rightHead (Singleton a) = Just a
+rightHead (Join l Empty) = rightHead l
 rightHead (Join _ r) = rightHead r
 
+-- | Inserts an element on the left and balances the tree
 cons ::
     a
     -> JoinList a
     -> JoinList a
-cons a = Join (Singleton a)
+cons a Empty = Singleton a
+cons a rhs = Join (Singleton a) rhs
 
+-- | Inserts an element on the right and balances the tree
 snoc ::
     JoinList a
     -> a
     -> JoinList a
-snoc ls = Join ls . Singleton
+snoc Empty a = Singleton a
+snoc ls a = Join ls $ Singleton a
 
 join ::
     JoinList a
